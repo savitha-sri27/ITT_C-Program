@@ -1,0 +1,11 @@
+int findFinalValue(int* nums, int numsSize, int original) {
+    int present[1001] = {0};
+    for (int i = 0; i < numsSize; i++) {
+        present[nums[i]] = 1;
+    }
+    while (original <= 1000 && present[original]) {
+        original *= 2;
+    }
+    
+    return original;
+}

@@ -1,0 +1,29 @@
+#include <limits.h>
+
+int thirdMax(int* nums, int numsSize) {
+    long m1 = -3000000000L; // Value smaller than any nums[i]
+    long m2 = -3000000000L;
+    long m3 = -3000000000L;
+
+    for (int i = 0; i < numsSize; i++) {
+        long val = nums[i];
+        if (val == m1 || val == m2 || val == m3) continue;
+        
+        if (val > m1) {
+            m3 = m2;
+            m2 = m1;
+            m1 = val;
+        } else if (val > m2) {
+            m3 = m2;
+            m2 = val;
+        } else if (val > m3) {
+            m3 = val;
+        }
+    }
+
+    long min_bound = -3000000000L;
+    if (m3 != min_bound) {
+        return (int)m3;
+    }
+    return (int)m1;
+}

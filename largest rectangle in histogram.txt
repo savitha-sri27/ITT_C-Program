@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+int largestRectangleArea(int* heights, int heightsSize) {
+    int* stack = (int*)malloc((heightsSize + 1) * sizeof(int));
+    int top = -1;
+    int maxArea = 0;  
+    int i = 0;
+    while (i <= heightsSize) {
+        int currentHeight = (i == heightsSize) ? 0 : heights[i];
+        if (top == -1 || currentHeight >= heights[stack[top]]) {
+            stack[++top] = i;
+            i++;
+        } else {
+            int heightIdx = stack[top--];
+            int h = heights[heightIdx];
+            int w = (top == -1) ? i : (i - stack[top] - 1);
+            
+            maxArea = MAX(maxArea, h * w);
+        }
+    }
+    free(stack);
+    return maxArea;
+}

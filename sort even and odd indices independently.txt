@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+int compareAsc(const void* a, const void* b) {
+    return (*(int*)a - *(int*)b);
+}
+int compareDesc(const void* a, const void* b) {
+    return (*(int*)b - *(int*)a);
+}
+int* sortEvenOdd(int* nums, int numsSize, int* returnSize) {
+    *returnSize = numsSize;
+    int* result = (int*)malloc(numsSize * sizeof(int));
+    if (result == NULL) return NULL;
+    int evenSize = (numsSize + 1) / 2;
+    int oddSize = numsSize / 2;   
+    int* evenArr = (int*)malloc(evenSize * sizeof(int));
+    int* oddArr = (int*)malloc(oddSize * sizeof(int));
+    int evenIdx = 0, oddIdx = 0;
+    for (int i = 0; i < numsSize; i++) {
+        if (i % 2 == 0) {
+            evenArr[evenIdx++] = nums[i];
+        } else {
+            oddArr[oddIdx++] = nums[i];
+        }
+    }
+    qsort(evenArr, evenSize, sizeof(int), compareAsc);
+    qsort(oddArr, oddSize, sizeof(int), compareDesc);
+    evenIdx = 0;
+    oddIdx = 0;
+    for (int i = 0; i < numsSize; i++) {
+        if (i % 2 == 0) {
+            result[i] = evenArr[evenIdx++];
+        } else {
+            result[i] = oddArr[oddIdx++];
+        }
+    }
+    free(evenArr);
+    free(oddArr);
+
+    return result;
+}

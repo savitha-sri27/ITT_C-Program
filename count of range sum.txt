@@ -1,0 +1,42 @@
+#include <stdlib.h>
+long long countWhileMergeSort(long long* sum, int start, int end, int lower, int upper) {
+    if (end - start <= 1) return 0;
+    int mid = start + (end - start) / 2;
+    long long count = countWhileMergeSort(sum, start, mid, lower, upper) + 
+                      countWhileMergeSort(sum, mid, end, lower, upper);  
+    int i = mid, j = mid, k = mid;
+    int t = 0;
+    long long* cache = (long long*)malloc((end - start) * sizeof(long long));
+    for (int idx = start; idx < mid; ++idx) {
+        while (i < end && sum[i] - sum[idx] < lower) i++;
+        while (j < end && sum[j] - sum[idx] <= upper) j++;
+        count += (j - i);
+    }
+    int p = start, q = mid;
+    int curr = 0;
+    while (p < mid && q < end) {
+        if (sum[p] < sum[q]) {
+            cache[curr++] = sum[p++];
+        } else {
+            cache[curr++] = sum[q++];
+        }
+    }
+    while (p < mid) cache[curr++] = sum[p++];
+    while (q < end) cache[curr++] = sum[q++];
+    
+    for (int idx = 0; idx < curr; ++idx) {
+        sum[start + idx] = cache[idx];
+    }  
+    free(cache);
+    return count;
+}
+int countRangeSum(int* nums, int numsSize, int lower, int upper) {
+    long long* sum = (long long*)malloc((numsSize + 1) * sizeof(long long));
+    sum[0] = 0;
+    for (int i = 0; i < numsSize; ++i) {
+        sum[i + 1] = sum[i] + nums[i];
+    }    
+    long long ans = countWhileMergeSort(sum, 0, numsSize + 1, lower, upper);
+    free(sum);
+    return (int)ans;
+}
